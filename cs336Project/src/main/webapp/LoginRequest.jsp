@@ -23,7 +23,8 @@
 			String username = request.getParameter("username");
 			String password = request.getParameter("password");
 			
-			String insert = "SELECT username, password FROM Accounts WHERE Username=? AND Password=?"; 
+			// String insert = "SELECT username, password FROM Accounts WHERE Username=? AND Password=?";
+			String insert = "SELECT username, password FROM Accounts WHERE Username=? AND Password=?";
 
 			PreparedStatement ps = connect.prepareStatement(insert); 
 			ps.setString(1, username);
@@ -37,7 +38,7 @@
 				session.setAttribute("user", username);
 				session.setAttribute("pass", password);
 				session.setAttribute("valid", "true");
-	
+				
 				results.close();
 				ps.close();
 				connect.close();
