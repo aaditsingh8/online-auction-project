@@ -24,7 +24,7 @@
 			String password = request.getParameter("password");
 			
 			// String insert = "SELECT username, password FROM Accounts WHERE Username=? AND Password=?";
-			String insert = "SELECT username, password FROM Accounts WHERE Username=? AND Password=?";
+			String insert = "SELECT isCustomerRep, isAdmin FROM Accounts WHERE Username=? AND Password=?";
 
 			PreparedStatement ps = connect.prepareStatement(insert); 
 			ps.setString(1, username);
@@ -39,6 +39,14 @@
 				session.setAttribute("pass", password);
 				session.setAttribute("valid", "true");
 				
+				if (results.getBoolean(1) == true) {
+					session.setAttribute("type", "CustomerRep");
+				} else if (results.getBoolean(2) == true) {
+					session.setAttribute("type", "Admin"); 
+				} else {
+					session.setAttribute("type", "User");
+				}
+
 				results.close();
 				ps.close();
 				connect.close();
