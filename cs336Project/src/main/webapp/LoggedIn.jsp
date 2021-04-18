@@ -39,6 +39,9 @@
 					</li>
 				</ul>
 			</li>
+			<li>
+				<a href="Participate.jsp">Auctions You Participated In</a>
+			</li>
 		</ul>
 
 	</body>

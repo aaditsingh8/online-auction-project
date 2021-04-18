@@ -15,8 +15,8 @@
 		</form>
 		
 		<h1>Buy Me</h1>
-		<h4>Your Closed Auctions : <%= session.getAttribute("user") %></h4>
-		<p>Find here all the items that have been sold in auctions started by you.</p>
+		<h4>Auctions with your Participation : <%= session.getAttribute("user") %></h4>
+		<p>Find here all the items that you have bid on and your highest bid on that item.</p>
 		
 		<%
 		
@@ -27,49 +27,36 @@
 			
 			String user = session.getAttribute("user").toString();
 
-			String insert = "SELECT a.aID, c.name, a.initPrice, a.minIncrement, a.minPrice, a.closeDateTime, b.username, b.price " +
-							"FROM auction a " +
-							"JOIN bought b USING (aID) " +
+			String insert = "SELECT b.aID, c.name, if((SELECT t1.isActive FROM auction t1 WHERE t1.aID = b.aID) = 1, 'Still Active', " +
+													"if((SELECT t2.username FROM bought t2 WHERE t2.aID = b.aID) = b.username, " +
+							                    	  "'You', 'Not You')) bought_by, max(b.price) " +
+							"FROM bids b " +
 							"JOIN sells s USING (aID) " +
 							"JOIN clothes c USING (itemID) " +
-							"WHERE a.username = ? " +
-							"AND a.isActive = 0 " +
-							"UNION " +
-							"SELECT a.aID, c.name, a.initPrice, a.minIncrement, a.minPrice, a.closeDateTime, 'No Buyer', 'Not Sold' " +
-							"FROM auction a " +
-							"JOIN sells s USING (aID) " +
-							"JOIN clothes c USING (itemID) " +
-							"WHERE a.username = ? " +
-							"AND a.isActive = 0 " +
-							"AND a.aID NOT IN (SELECT DISTINCT t.aID " +
-											  "FROM bought t)";
+							"WHERE b.username = ? " +
+							"GROUP BY b.aID";
 			                                                                      
 			PreparedStatement ps = connect.prepareStatement(insert);     
 			ps.setString(1, user);
-			ps.setString(2, user);
 			
 			ResultSet results = ps.executeQuery();
 		%>
 			
 			<table style="border:1px solid black;border-collapse:collapse;">
-				<caption>Auctions Currently Inactive</caption>
+				<caption>Auctions You Participated In</caption>
 				<thead>
 					<tr>    
 						<th style="border:1px solid black;"> aID </th>
 						<th style="border:1px solid black;"> Name </th>
-						<th style="border:1px solid black;"> Init Price </th>
-						<th style="border:1px solid black;"> Min Increment </th>
-						<th style="border:1px solid black;"> Min Price </th>
-						<th style="border:1px solid black;"> Close Time </th>
-						<th style="border:1px solid black;"> Buyer </th>
-						<th style="border:1px solid black;"> Selling Price </th>
+						<th style="border:1px solid black;"> Bought By </th>
+						<th style="border:1px solid black;"> Highest Bid </th>
 					</tr>
 				</thead>
 				<% 
 				if (results.next() == false) {
 				%>
 					<tr>
-						<td colspan="8" style="text-align: center;">None</td>
+						<td colspan="4" style="text-align: center;">None</td>
 					</tr>
 				<%
 				}
@@ -80,10 +67,6 @@
 						<td style="border:1px solid black;"><%= results.getString(2) %></td>
 						<td style="border:1px solid black;"><%= results.getString(3) %></td>
 						<td style="border:1px solid black;"><%= results.getString(4) %></td>
-						<td style="border:1px solid black;"><%= results.getString(5) %></td>
-						<td style="border:1px solid black;"><%= results.getString(6) %></td>
-						<td style="border:1px solid black;"><%= results.getString(7) %></td>
-						<td style="border:1px solid black;"><%= results.getString(8) %></td>
 					</tr>
 				<% } %>
 			</table>
