@@ -29,8 +29,15 @@
 		
 		<h4>Options</h4>		
 		<ul>
-			<li>
-				<a href="UserAuctions.jsp">See Your Auctions</a>
+			<li> Your auctions information
+				<ul>
+					<li>
+						<a href="UserAuctions.jsp">See Your Active Auctions</a>
+					</li>
+					<li>
+						<a href="UserAuctionsSold.jsp">See Your Closed Auctions</a>
+					</li>
+				</ul>
 			</li>
 		</ul>
 

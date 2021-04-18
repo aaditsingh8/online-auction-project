@@ -15,8 +15,8 @@
 		</form>
 		
 		<h1>Buy Me</h1>
-		<h4>Your Auctions : <%= session.getAttribute("user") %></h4>
-		<p>Find here all the items available for sale in auctions started by you.</p>
+		<h4>Your Closed Auctions : <%= session.getAttribute("user") %></h4>
+		<p>Find here all the items that have been sold in auctions started by you.</p>
 		
 		<%
 		
@@ -29,34 +29,20 @@
 
 			String insert = "SELECT a.aID, c.name, a.initPrice, a.minIncrement, a.minPrice, a.closeDateTime, b.username, b.price " +
 							"FROM auction a " +
-							"JOIN bids b USING (aID) " +
+							"JOIN bought b USING (aID) " +
 							"JOIN sells s USING (aID) " +
 							"JOIN clothes c USING (itemID) " +
 							"WHERE a.username = ? " +
-							"AND a.isActive = 1 " +
-							"AND price = (SELECT max(price) " +
-										 "FROM bids b2 " +
-					            		 "WHERE b2.aID = a.aID " +
-					            		 "GROUP BY b2.aID) " +
-		            		"UNION " +
-		            		"SELECT a.aID, c.name, a.initPrice, a.minIncrement, a.minPrice, a.closeDateTime, 'No Bidder', 'No Bid Yet' " +
-		            		"FROM auction a " +
-		            		"JOIN sells s USING (aID) " +
-		            		"JOIN clothes c USING (itemID) " +
-		            		"WHERE a.username = ? " +
-		            		"AND a.isActive = 1 " +
-		            		"AND a.aID NOT IN (SELECT DISTINCT t.aID " +
-		            						  "FROM bids t)";
+							"AND a.isActive = 0";
 			                                                                      
 			PreparedStatement ps = connect.prepareStatement(insert);     
 			ps.setString(1, user);
-			ps.setString(2, user);
 			
 			ResultSet results = ps.executeQuery();
 		%>
 			
 			<table style="border:1px solid black;border-collapse:collapse;">
-				<caption>Auctions Currently Active</caption>
+				<caption>Auctions Currently Inactive</caption>
 				<thead>
 					<tr>    
 						<th style="border:1px solid black;"> aID </th>
@@ -65,11 +51,11 @@
 						<th style="border:1px solid black;"> Min Increment </th>
 						<th style="border:1px solid black;"> Min Price </th>
 						<th style="border:1px solid black;"> Close Time </th>
-						<th style="border:1px solid black;"> Current Bidder </th>
-						<th style="border:1px solid black;"> Bid Price </th>
+						<th style="border:1px solid black;"> Buyer </th>
+						<th style="border:1px solid black;"> Selling Price </th>
 					</tr>
 				</thead>
-				<%
+				<% 
 				if (results.next() == false) {
 				%>
 					<tr>
