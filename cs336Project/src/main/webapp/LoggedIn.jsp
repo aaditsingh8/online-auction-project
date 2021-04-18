@@ -24,6 +24,15 @@
 				<td><a href="Logout.jsp"> Logout </a></td>
 			</tr>
 		</table>
+		
+		<br>
+		
+		<h4>Options</h4>		
+		<ul>
+			<li>
+				<a href="UserAuctions.jsp">See Your Auctions</a>
+			</li>
+		</ul>
 
 	</body>
 </html>

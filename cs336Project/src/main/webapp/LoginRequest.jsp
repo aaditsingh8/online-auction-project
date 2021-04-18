@@ -23,7 +23,6 @@
 			String username = request.getParameter("username");
 			String password = request.getParameter("password");
 			
-			// String insert = "SELECT username, password FROM Accounts WHERE Username=? AND Password=?";
 			String insert = "SELECT isCustomerRep, isAdmin FROM Accounts WHERE Username=? AND Password=?";
 
 			PreparedStatement ps = connect.prepareStatement(insert); 

@@ -12,7 +12,7 @@
 	<body>
 		<h1>Buy Me</h1>
 		<form method="post" action="LoginRequest.jsp">
-			<table border = "1">
+			<table>
 				<thead>
 					<tr>
 						<th colspan = "2"> Login </th>

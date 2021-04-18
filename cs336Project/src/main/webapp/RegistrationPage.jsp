@@ -20,15 +20,16 @@
 				}
 			}
 		</script>
-					<br>
+		
 		<form action="LoginPage.jsp">
-		<%//session.setAttribute("valid", "true");%>
 		<input type="submit" value="back">
 		</form>
+		
 		<br>
 		<h1>Buy Me</h1>
 		<h4>Register an Account</h4>
 		<br>
+		
 		<form method="post" action="RegistrationRequest.jsp" onsubmit="return checkPasswords(this);">			
 			<table>
 				<tr>

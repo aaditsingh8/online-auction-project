@@ -60,6 +60,7 @@
 
 		session.setAttribute("user", username);
 		session.setAttribute("pass", password);
+		session.setAttribute("type", "User");
 		session.setAttribute("valid", "true");
 		response.sendRedirect("LoggedIn.jsp");
 		
