@@ -344,7 +344,7 @@
 				<tr>
 					<% if (!seller.equals(session.getAttribute("user").toString())) { %>
 						<td>
-							<form action="----.jsp" method="post">
+							<form action="BidOnAuction.jsp" method="post">
 						        <input type="hidden" name="aID" value="<%= aID %>"/>
 						        <input type="submit" value="Bid on Item" />
 						    </form>
