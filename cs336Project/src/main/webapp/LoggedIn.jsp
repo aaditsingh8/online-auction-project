@@ -20,6 +20,7 @@
 		<table border = "1">
 			<tr>
 				<td> Home </td>
+				<td><a href="Search.jsp"> Search </a></td>
 				<td><%= session.getAttribute("type") %> : <%= session.getAttribute("user") %></td>
 				<td><a href="Logout.jsp"> Logout </a></td>
 			</tr>
