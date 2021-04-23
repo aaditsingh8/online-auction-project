@@ -49,7 +49,7 @@
 						<th style="border:1px solid black;padding:5px"> aID </th>
 						<th style="border:1px solid black;padding:5px"> Name </th>
 						<th style="border:1px solid black;padding:5px"> Bought By </th>
-						<th style="border:1px solid black;padding:5px"> Highest Bid </th>
+						<th style="border:1px solid black;padding:5px"> Your Highest Bid </th>
 						<th style="border:1px solid black;padding:5px"> Option </th>
 					</tr>
 				</thead>

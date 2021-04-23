@@ -27,7 +27,7 @@
 			String aID = request.getParameter("aID");
 
 			String insert = "SELECT a.aID, c.name, a.initPrice, a.closeDateTime, b.username, b.price, " +
-							"c.category, c.brand, c.material, c.color, c.size, a.isActive " +
+							"c.category, c.brand, c.material, c.color, c.size, a.isActive, a.username " +
 							"FROM auction a " +
 							"JOIN sells s USING (aID) " +
 							"JOIN clothes c USING (itemID) " +
@@ -40,7 +40,7 @@
 							"WHERE a.aID = ? " +
 							"UNION " +
 							"SELECT a.aID, c.name, a.initPrice, a.closeDateTime, 'No Bidder Yet' username, 'No Bid Yet' price, " +
-							"c.category, c.brand, c.material, c.color, c.size, a.isActive " +
+							"c.category, c.brand, c.material, c.color, c.size, a.isActive, a.username " +
 							"FROM auction a " +
 							"JOIN sells s USING (aID) " +
 							"JOIN clothes c USING (itemID) " +
@@ -54,10 +54,11 @@
 			ResultSet results = ps.executeQuery();
 			
 			boolean isActive = false;
-			String buyer = "", price = "", category = "";
+			String buyer = "", price = "", category = "", seller = "";
 			
 			if(results.next()) {
 				isActive = results.getBoolean(12);
+				seller = results.getString(13);
 				if(!isActive) {
 					String insert2 = "SELECT username, price, aID " +
 									 "FROM bought " +
@@ -336,11 +337,37 @@
 				}
 				%>
 			</table>
-
+			
+			<!-- View Bid History, Bid on this Item, View Similar Items -->
+			<p>User Options:</p>
+			<table>
+				<tr>
+					<% if (!seller.equals(session.getAttribute("user").toString())) { %>
+						<td>
+							<form action="----.jsp" method="post">
+						        <input type="hidden" name="aID" value="<%= aID %>"/>
+						        <input type="submit" value="Bid on Item" />
+						    </form>
+						</td>
+					<% } %>
+					<td>
+						<form action="BidHistory.jsp" method="post">
+					        <input type="hidden" name="aID" value="<%= aID %>"/>
+					        <input type="submit" value="View Bid History" />
+					    </form>
+					</td>
+					<td>
+						<form action="SimilarItems.jsp" method="post">
+					        <input type="hidden" name="aID" value="<%= aID %>"/>
+					        <input type="submit" value="View Similar Items" />
+					    </form>
+					</td>
+				</tr>
+			</table>
 		<%	
 			connect.close();
 			
-		} catch (Exception e){
+		} catch (Exception e) {
 			
 			out.println(e);
 			
