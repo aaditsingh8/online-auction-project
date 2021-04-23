@@ -7,7 +7,7 @@
 <html>
 	<head>
 		<meta charset="ISO-8859-1">
-		<title>Insert title here</title>
+		<title>Your Active Auctions</title>
 	</head>
 	<body>
 		<form action="LoggedIn.jsp">
@@ -59,35 +59,42 @@
 				<caption>Auctions Currently Active</caption>
 				<thead>
 					<tr>    
-						<th style="border:1px solid black;"> aID </th>
-						<th style="border:1px solid black;"> Name </th>
-						<th style="border:1px solid black;"> Init Price </th>
-						<th style="border:1px solid black;"> Min Increment </th>
-						<th style="border:1px solid black;"> Min Price </th>
-						<th style="border:1px solid black;"> Close Time </th>
-						<th style="border:1px solid black;"> Current Bidder </th>
-						<th style="border:1px solid black;"> Bid Price </th>
+						<th style="border:1px solid black;padding:5px"> aID </th>
+						<th style="border:1px solid black;padding:5px"> Name </th>
+						<th style="border:1px solid black;padding:5px"> Init Price </th>
+						<th style="border:1px solid black;padding:5px"> Min Increment </th>
+						<th style="border:1px solid black;padding:5px"> Min Price </th>
+						<th style="border:1px solid black;padding:5px"> Close Time </th>
+						<th style="border:1px solid black;padding:5px"> Current Bidder </th>
+						<th style="border:1px solid black;padding:5px"> Bid Price </th>
+						<th style="border:1px solid black;padding:5px"> Option </th>
 					</tr>
 				</thead>
 				<%
 				if (results.next() == false) {
 				%>
 					<tr>
-						<td colspan="8" style="text-align: center;">None</td>
+						<td colspan="9" style="text-align: center;">None</td>
 					</tr>
 				<%
 				}
 				results.previous();
 				while (results.next()) { %>
 					<tr>    
-						<td style="border:1px solid black;"><%= results.getString(1) %></td>
-						<td style="border:1px solid black;"><%= results.getString(2) %></td>
-						<td style="border:1px solid black;"><%= results.getString(3) %></td>
-						<td style="border:1px solid black;"><%= results.getString(4) %></td>
-						<td style="border:1px solid black;"><%= results.getString(5) %></td>
-						<td style="border:1px solid black;"><%= results.getString(6) %></td>
-						<td style="border:1px solid black;"><%= results.getString(7) %></td>
-						<td style="border:1px solid black;"><%= results.getString(8) %></td>
+						<td style="border:1px solid black;padding:5px"><%= results.getString(1) %></td>
+						<td style="border:1px solid black;padding:5px"><%= results.getString(2) %></td>
+						<td style="border:1px solid black;padding:5px"><%= results.getString(3) %></td>
+						<td style="border:1px solid black;padding:5px"><%= results.getString(4) %></td>
+						<td style="border:1px solid black;padding:5px"><%= results.getString(5) %></td>
+						<td style="border:1px solid black;padding:5px"><%= results.getString(6) %></td>
+						<td style="border:1px solid black;padding:5px"><%= results.getString(7) %></td>
+						<td style="border:1px solid black;padding:5px"><%= results.getString(8) %></td>
+						<td style="border:1px solid black;padding:5px">
+							<form action="AuctionInfo.jsp" method="post">
+						        <input type="hidden" name="aID" value="<%= results.getString(1) %>"/>
+						        <input type="submit" value="View Info" />
+						    </form>
+						</td>
 					</tr>
 				<% } %>
 			</table>
