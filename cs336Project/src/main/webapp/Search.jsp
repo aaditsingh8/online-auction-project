@@ -26,45 +26,53 @@
 			}
 			
 			function ifOther(form){
+				var flag = true;
 				if(!!(form.category.value === 'other' & form.categoryOther.value.length === 0)){
 					alert('Please enter your custom category value in the "other" option.')
-					return false;
-				} else if(!!(form.brand.value === 'other' & form.brandOther.value.length === 0)){
-					alert('Please enter your custom brand value in the "other" option.')
-					return false;
-				} else if(!!(form.material.value === 'other' & form.materialOther.value.length === 0)){
-					alert('Please enter your custom material value in the "other" option.')
-					return false;
-				} else if(!!(form.color.value === 'other' & form.colorOther.value.length === 0)){
-					alert('Please enter your custom color value in the "other" option.')
-					return false;
-				} else if(!!(form.size.value === 'other' & form.sizeOther.value.length === 0)){
-					alert('Please enter your custom size value in the "other" option.')
-					return false;
-				} else {
-					return true;
+					flag = false;
 				}
+				if(!!(form.brand.value === 'other' & form.brandOther.value.length === 0)){
+					alert('Please enter your custom brand value in the "other" option.')
+					flag = false;
+				} 
+				if(!!(form.material.value === 'other' & form.materialOther.value.length === 0)){
+					alert('Please enter your custom material value in the "other" option.')
+					flag = false;
+				}
+				if(!!(form.color.value === 'other' & form.colorOther.value.length === 0)){
+					alert('Please enter your custom color value in the "other" option.')
+					flag = false;
+				}
+				if(!!(form.size.value === 'other' & form.sizeOther.value.length === 0)){
+					alert('Please enter your custom size value in the "other" option.')
+					flag = false;
+				}
+				return flag;
 			}
 			
 			function notOther(form){
+				var flag = true;
 				if(!!(form.category.value !== 'other' & form.categoryOther.value.length > 0)){
 					alert('You cannot type your own category if you have preselected aother category.')
-					return false;
-				} else if(!!(form.brand.value !== 'other' & form.brandOther.value.length > 0)){
-					alert('You cannot type your own brand if you have selected "any" brand.')
-					return false;
-				} else if(!!(form.material.value !== 'other' & form.materialOther.value.length > 0)){
-					alert('You cannot type your own material if you have selected "any" material.')
-					return false;
-				} else if(!!(form.color.value !== 'other' & form.colorOther.value.length > 0)){
-					alert('You cannot type your own color if you have selected "any" color.')
-					return false;
-				} else if(!!(form.size.value !== 'other' & form.sizeOther.value.length > 0)){
-					alert('You cannot type your own size if you have selected "any" size.')
-					return false;
-				} else {
-					return true;
+					flag = false;
 				}
+				if(!!(form.brand.value !== 'other' & form.brandOther.value.length > 0)){
+					alert('You cannot type your own brand if you have selected "any" brand.')
+					flag = false;
+				}
+				if(!!(form.material.value !== 'other' & form.materialOther.value.length > 0)){
+					alert('You cannot type your own material if you have selected "any" material.')
+					flag = false;
+				}
+				if(!!(form.color.value !== 'other' & form.colorOther.value.length > 0)){
+					alert('You cannot type your own color if you have selected "any" color.')
+					flag = false;
+				}
+				if(!!(form.size.value !== 'other' & form.sizeOther.value.length > 0)){
+					alert('You cannot type your own size if you have selected "any" size.')
+					flag = false;
+				}
+				return flag;
 			}
 		</script>
 		
@@ -73,11 +81,17 @@
 	    </form>
 		
 		<h1>Buy Me</h1>
-		<form method="post" action="Result.jsp" onsubmit="return !!(checkSearch(this) & ifOther(this) & notOther(this));">
+		<form method="post" action="Result.jsp" onsubmit="return !!(ifOther(this) & notOther(this));">
 			<table>
 				<tr>
 					<td>Find:</td>
-					<td colspan="2"><input type="search" name="search" placeholder="browse auctions..." size="100" required /></td>
+					<td colspan="2">
+						<% if(request.getParameter("search") != null) { %>
+							<input type="search" name="search" placeholder="browse auctions..." size="100" value="<%= request.getParameter("search") %>" />
+						<% } else { %>
+							<input type="search" name="search" placeholder="browse auctions..." size="100" />
+						<% } %>
+					</td>
 				</tr>
 				<tr>
 					<td></td>
@@ -89,8 +103,9 @@
 			</table>
 			
 			Use Buy Me's advanced browsing methods to find the items of your choice.<br>
+			Search with keywords separated by spaces ' ' to find auctions with the desired keywords.<br>
 			The following parameters are set to "any" by default, you can customize those to specialize your searches.<br>
-			Tune the parameters according to your wish and click on "search."<br><br>
+			You can leave the search bar empty to search based on the parameters below only.<br><br>
 			
 	    	<table>
 	    		<thead>

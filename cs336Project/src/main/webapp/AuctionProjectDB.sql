@@ -319,7 +319,7 @@ DROP TABLE IF EXISTS `alerts`;
 CREATE TABLE `alerts` (
   `username` varchar(20) NOT NULL,
   `subject` varchar(50) NOT NULL,
-  `text` varchar(200) DEFAULT NULL,
+  `text` text DEFAULT NULL,
   PRIMARY KEY (`username`),
   FOREIGN KEY (`username`) REFERENCES `accounts`(`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
