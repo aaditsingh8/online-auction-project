@@ -138,7 +138,7 @@
 			
 			<table style="border:1px solid black;border-collapse:collapse;">
 				<caption>Auction Matches</caption>
-				<thead>
+				<thead style="border:1px solid black;border-collapse:collapse;">
 					<tr>    
 						<th> aID </th>			<!-- 1  -->
 						<th> Name </th>			<!-- 2  -->

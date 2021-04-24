@@ -16,35 +16,26 @@
 	</head>
 	<body>
 		<script>			
-			function checkSearch(form){
-				if(form.search.value.length < 1){
-					alert('Input should be at least one character.')
-					return false;
-				} else {
-					return true;
-				}
-			}
-			
 			function ifOther(form){
 				var flag = true;
 				if(!!(form.category.value === 'other' & form.categoryOther.value.length === 0)){
-					alert('Please enter your custom category value in the "other" option.')
+					alert('Please enter your custom category value in the "other" option or choose "any".')
 					flag = false;
 				}
 				if(!!(form.brand.value === 'other' & form.brandOther.value.length === 0)){
-					alert('Please enter your custom brand value in the "other" option.')
+					alert('Please enter your custom brand value in the "other" option or choose "any".')
 					flag = false;
 				} 
 				if(!!(form.material.value === 'other' & form.materialOther.value.length === 0)){
-					alert('Please enter your custom material value in the "other" option.')
+					alert('Please enter your custom material value in the "other" option or choose "any".')
 					flag = false;
 				}
 				if(!!(form.color.value === 'other' & form.colorOther.value.length === 0)){
-					alert('Please enter your custom color value in the "other" option.')
+					alert('Please enter your custom color value in the "other" option or choose "any".')
 					flag = false;
 				}
 				if(!!(form.size.value === 'other' & form.sizeOther.value.length === 0)){
-					alert('Please enter your custom size value in the "other" option.')
+					alert('Please enter your custom size value in the "other" option or choose "any".')
 					flag = false;
 				}
 				return flag;

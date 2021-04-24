@@ -30,18 +30,36 @@
 		
 		<h4>Options</h4>		
 		<ul>
-			<li> Your auctions information
+			<li> Auction Infomation
 				<ul>
-					<li>
-						<a href="UserAuctions.jsp">See Your Active Auctions</a>
+					<li> Your Auctions
+						<ul>
+							<li>
+								<a href="UserAuctions.jsp">Active Auctions</a>
+							</li>
+							<li>
+								<a href="UserAuctionsSold.jsp">Closed Auctions</a>
+							</li>
+						</ul>
 					</li>
-					<li>
-						<a href="UserAuctionsSold.jsp">See Your Closed Auctions</a>
+					<li> Other Auctions
+						<ul>
+							<li>
+								<a href="Participate.jsp">Auctions You Participated In</a>
+							</li>
+						</ul>
 					</li>
 				</ul>
 			</li>
-			<li>
-				<a href="Participate.jsp">Auctions You Participated In</a>
+			<li> Wishlist
+				<ul>
+					<li>
+						<a href="AddWishlist.jsp">Add to your Wishlist</a>
+					</li>
+					<li>
+						<a href="Wishlist.jsp">See your Wishlist</a>
+					</li>
+				</ul>
 			</li>
 		</ul>
 
