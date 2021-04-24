@@ -7,9 +7,57 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-		<title>Insert title here</title>
+		<title>Manual Bidding</title>
 	</head>
 	<body>
-	<h1>Create a manual bid</h1>
+		
+		
+		<%
+			String bidAmount = request.getParameter("bidAmount");
+			//String user = (String)session.getAttribute("user");
+			String upperLimit = request.getParameter("upperLimit");
+			String bidIncrement = request.getParameter("bidIncrement");
+			
+			int highestBid=0; 
+			int initialPrice=0;
+			int minIncrement=0;
+			
+			Connection conn = null;
+			PreparedStatement ps1 = null;
+			ResultSet rs = null;
+			String url = "jdbc:mysql://localhost:3306/auctionproject";
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			conn = DriverManager.getConnection(url, "root", "Daniel123909@");
+			
+			
+			
+			String insert = "SELECT a.aID, a.initPrice, a.minIncrement FROM auction a WHERE a.aID = ?;";
+			PreparedStatement ps = conn.prepareStatement(insert);    
+			String aID = request.getParameter("aID");
+			ps.setString(1,aID);
+			ResultSet results = ps.executeQuery();
+			if(results.next()) {
+				initialPrice = results.getInt(2);
+				minIncrement = results.getInt(3);
+				
+			}
+			else {
+				out.println("<h4>Error: Inactive auction not found.</h4>");
+			}
+			
+			ps.close();
+			results.close();
+			
+			
+		%>
+		<div>
+			<form action="manualBidHandler.jsp" method="POST">	
+				<h5>Minimum Price Increment: <%=minIncrement%></h5>
+				<label for="bid">Your Bid:</label>
+				<input type="text" name="bid" id="bid"> <br>
+				<input type="hidden" name="aID" value="<%= aID%>"/>
+				<input type="submit" value="Submit">
+			</form>
+		</div>	
 	</body>
-	</html>
+</html>
