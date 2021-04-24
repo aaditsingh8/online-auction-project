@@ -43,10 +43,16 @@
 	        <input type="submit" value="Manual Bid" />
 		</form>
 		<h5>Create an automatic bid:</h5>
-		<form action="automaticBid.jsp" method="post">
-	        <input type="hidden" name="aID" value="<%= aID %>"/>
-	        <input type="submit" value="Automatic Bid" />
-		</form>
+		<form action="automaticBid.jsp" method="POST">
+			<input type="hidden" name="aID" value="<%= aID %>"/>
+			<label>Bid Amount:</label> 
+				<input type="text" name="bidAmount" required/> <br>
+			<label>Secret upper limit:</label> 
+				<input type="text" name="upperLimit" /> <br>
+			<label>Bid Increment:</label> 
+				<input type="text" name="bidIncrement"/> <br>
+			<button type="submit" value="Submit"/>Create Autobid</button>
+		</form>	
 		<script></script>
 	</body>
 </html>

@@ -7,21 +7,86 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-		<title>Insert title here</title>
+		<title>Automatic Bid for Auction: <%= request.getParameter("aID") %></title>
 	</head>
 	<body>
-	<h1>Create an automatic bid</h1>
-	<form action="automaticBid.jsp" method="post">
-		<label>Secret Upper Limit: </label>
-        <input type="text" name="upperLimit"/><br>
-        <label>Bid Increment: </label>
-        <input type="text" name="bidIncrement"/><br>
-        <input type="submit" value="Create Bid" />
-	</form>
-	<%
+		<h1>Create an automatic bid</h1>
+		<%
+		
+			String bidAmount = request.getParameter("bidAmount");
+			//String user = (String)session.getAttribute("user");
+			String upperLimit = request.getParameter("upperLimit");
+			String bidIncrement = request.getParameter("bidIncrement");
 			
+			int highestBid=0; 
+			int initialPrice=0;
+			//cannot bid less than current bid price
+			//cannot bid less than initial price
+			ApplicationDB db = new ApplicationDB();
+			Connection connect = db.getConnection();
+			String insert = "SELECT a.aID, a.initPrice FROM auction a WHERE a.aID = ?;";
+			PreparedStatement ps = connect.prepareStatement(insert);    
+			String aID = request.getParameter("aID");
+			ps.setString(1,aID);
+			ResultSet results = ps.executeQuery();
+			if(results.next()) {
+				initialPrice = results.getInt(2);			
+			}
+			else {
+				out.println("<h4>Error: Inactive auction not found.</h4>");
+			}
+			insert = "select max(b.price) from bids b join auction a on b.aid = a.aid where b.aid = ?;";
+			ps = connect.prepareStatement(insert);
+			ps.setString(1,aID);
+			results = ps.executeQuery(); 
+			if(results.next()) {
+				highestBid = results.getInt(1);			
+			}
+			else {
+				out.println("<h4>Error: Inactive auction not found.</h4>");
+			}
+			
+			ps.close();
+			results.close();
+			
+			if ((Double.parseDouble(bidAmount) <= highestBid)) {
+				%> 
+				<p>Please enter a bid higher than <%=highestBid%></p>
+				<form action="BidOnAuction.jsp">
+					<input type="hidden" name="aID" value="<%= aID%>"/>
+					<input type="submit" value="Re-enter values">
+				</form>				<%	
+			} else if ((Double.parseDouble(bidAmount) < initialPrice)) {
+				%> 
+				<p>Please enter a bid higher than <%=initialPrice%></p>
+				<form action="BidOnAuction.jsp">
+					<input type="hidden" name="aID" value="<%= aID%>"/>
+					<input type="submit" value="Re-enter values">
+				</form>
+				<%	
+			} else {
+				String insertBid = "INSERT INTO Bids (aID, username, price, timestamp, bidLimit, maxIncrement)"
+						+ "VALUES (?, ?, ?, ?, ?, ?)";
+				PreparedStatement bidPs = connect.prepareStatement(insert);
+				ps.setString(1, aID);
+				ps.setString(2, (String)session.getAttribute("user"));
+				ps.setInt(3, Integer.parseInt(bidAmount));
+				ps.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
+				ps.setInt(5, Integer.parseInt(upperLimit));
+				ps.setInt(6, Integer.parseInt(bidIncrement));
+				
+
+			}
+		%>
 	
-	%>
+		<h5>Initial Price: <%=initialPrice%></h5>
+		<h5>Highest Bid: <%=highestBid%></h5>
+		
+		<%
+		
+		%>
+		
+	
 	</body>
 	
 </html>
