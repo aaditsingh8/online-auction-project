@@ -318,9 +318,10 @@ DROP TABLE IF EXISTS `alerts`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `alerts` (
   `username` varchar(20) NOT NULL,
+  `alertNum` int NOT NULL,
   `subject` varchar(50) NOT NULL,
   `text` text DEFAULT NULL,
-  PRIMARY KEY (`username`),
+  PRIMARY KEY (`username`, `alertNum`),
   FOREIGN KEY (`username`) REFERENCES `accounts`(`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;

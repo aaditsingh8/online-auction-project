@@ -7,7 +7,7 @@
 <html>
 	<head>
 		<meta charset="ISO-8859-1">
-		<title>Your Wishlist</title>
+		<title>Alerts</title>
 		<style>
 			td, th {
 				padding: 5px;
@@ -20,7 +20,7 @@
 	    </form>
 		
 		<h1>Buy Me</h1>
-		<h4>Your Wishlist</h4>
+		<h4>Your Alerts</h4>
 		<% 
 		try{
 			
@@ -32,7 +32,7 @@
 			// CREATING STRING FOR QUERY
 			// Name, Category, Brand, Material, Color, Size
 			
-			String query = "SELECT name, category, brand, material, color, size, itemNum FROM wishlist WHERE username = '" + username + "'";
+			String query = "SELECT `subject`, `alertNum` FROM `alerts` WHERE `username` = '" + username + "'";
 			
 			PreparedStatement ps = connect.prepareStatement(query);
 			ResultSet results = ps.executeQuery(); %>
@@ -40,61 +40,47 @@
 			<table style="border:1px solid black;border-collapse:collapse;">
 				<thead style="border:1px solid black;border-collapse:collapse;">
 					<tr>    
-						<th> ID </th>			<!-- 1  -->
-						<th> Name </th>			<!-- 2  -->
-						<th> Category </th>		<!-- 3  -->
-						<th> Brand </th>		<!-- 4  -->
-						<th> Material </th>		<!-- 5  -->
-						<th> Color </th>		<!-- 6  -->
-						<th> Size </th>			<!-- 7  -->
-						<th> Option </th>		<!-- 8  -->
+						<th style="text-align: center;"> Num </th>						<!-- 1  -->
+						<th style="text-align: center;"> Subject </th>					<!-- 2  -->
+						<th colspan="2" style="text-align: center;"> Options </th>		<!-- 3, 4  -->
 					</tr>
 				</thead>
 				<% if (results.next() == false) { %>
 					<tr>
-						<td colspan="8" style="text-align: center;">No Items in Wishlist. Add <a href="AddWishlist.jsp">here</a>.</td>
+						<td colspan="4" style="text-align: center;">No new alerts.</td>
 					</tr>
 				<% }
 				results.previous();
 				
+				int count = 1;
 				while (results.next()) { %>
 					<tr>
-						<td>#<%= results.getString(7) %></td>
-						<% 
-							for(int i = 1; i <= 6; i++) {
-								if(results.getString(i) == null) {
-									out.println("<td> any </td>");
-								} else {
-									out.println("<td>" + results.getString(i) + "</td>");
-								}
-							} 
-						%>
+						<td><%= count %></td>
+						<td><%= results.getString(1) %></td>
 						<td>
-							<form action="RemoveWishlist.jsp" method="post">
-						        <input type="hidden" name="itemNum" value="<%= results.getString(7) %>"/>
+							<form action="AlertInfo.jsp" method="post">
+						        <input type="hidden" name="alertNum" value="<%= results.getString(2) %>"/>
+						        <input type="submit" value="View" />
+						    </form>
+						</td>
+						<td>
+							<form action="RemoveAlert.jsp" method="post">
+						        <input type="hidden" name="alertNum" value="<%= results.getString(2) %>"/>
 						        <input type="submit" value="Remove" />
 						    </form>
 						</td>
 					</tr>
-				<% } %>
+				<% 
+				count++;
+				} 
+				%>
 			</table><br>
 			
 			Options: <br><br>
-			<table>
-				<tr>
-					<td>
-						<form action="AddWishlist.jsp">
-				        	<input type="submit" value="Add to Wishlist" />
-				    	</form>
-					</td>
-					<td>
-						<form action="RemoveWishlist.jsp">
-							<input type="hidden" name="itemNum" value="all" />
-				        	<input type="submit" value="Clear Wishlist" />
-				    	</form>
-					</td>
-				</tr>
-			</table>
+			<form action="RemoveAlert.jsp">
+				<input type="hidden" name="alertNum" value="all" />
+	        	<input type="submit" value="Clear all Alerts" />
+	    	</form>
 
 		<%	ps.close();
 			results.close();

@@ -7,7 +7,7 @@
 <html>
 	<head>
 		<meta charset="ISO-8859-1">
-		<title>Remove from Wishlist</title>
+		<title>Remove Alert</title>
 
 	</head>
 	<body>
@@ -18,13 +18,13 @@
 			Connection connect = database.getConnection();
 			
 			String username = session.getAttribute("user").toString();
-			String itemNum = request.getParameter("itemNum");
+			String alertNum = request.getParameter("alertNum");
 			// CREATING STRING FOR QUERY
 			
-			String update = "DELETE FROM wishlist WHERE username = '" + username + "'";
+			String update = "DELETE FROM alerts WHERE username = '" + username + "'";
 			
-			if(!itemNum.equalsIgnoreCase("all")){
-				update += " AND itemNum = " + itemNum;
+			if(!alertNum.equalsIgnoreCase("all")){
+				update += " AND alertNum = " + alertNum;
 			}
 			
 			PreparedStatement stmt = connect.prepareStatement(update);
@@ -33,7 +33,7 @@
 			stmt.close();
 			connect.close();
 			
-			response.sendRedirect("Wishlist.jsp");
+			response.sendRedirect("Alerts.jsp");
 			
 		} catch (Exception e){
 			

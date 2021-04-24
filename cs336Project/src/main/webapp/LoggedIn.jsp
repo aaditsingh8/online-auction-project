@@ -26,8 +26,6 @@
 			</tr>
 		</table>
 		
-		<br>
-		
 		<h4>Options</h4>		
 		<ul>
 			<li> Auction Infomation
@@ -60,6 +58,9 @@
 						<a href="Wishlist.jsp">See your Wishlist</a>
 					</li>
 				</ul>
+			</li>
+			<li>
+				<a href="Alerts.jsp">Alerts</a>
 			</li>
 		</ul>
 
