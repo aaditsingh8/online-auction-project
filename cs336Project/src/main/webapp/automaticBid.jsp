@@ -12,7 +12,6 @@
 	<body>
 		<h1>Create an automatic bid</h1>
 		<%
-		
 			String bidAmount = request.getParameter("bidAmount");
 			//String user = (String)session.getAttribute("user");
 			String upperLimit = request.getParameter("upperLimit");
@@ -46,47 +45,54 @@
 				out.println("<h4>Error: Inactive auction not found.</h4>");
 			}
 			
-			ps.close();
-			results.close();
-			
-			if ((Double.parseDouble(bidAmount) <= highestBid)) {
-				%> 
+			if ((Double.parseDouble(bidAmount) <= highestBid)) { %> 
 				<p>Please enter a bid higher than <%=highestBid%></p>
 				<form action="BidOnAuction.jsp">
 					<input type="hidden" name="aID" value="<%= aID%>"/>
 					<input type="submit" value="Re-enter values">
-				</form>				<%	
-			} else if ((Double.parseDouble(bidAmount) < initialPrice)) {
-				%> 
+				</form>				
+			<%	} else if ((Double.parseDouble(bidAmount) < initialPrice)) { %>
 				<p>Please enter a bid higher than <%=initialPrice%></p>
 				<form action="BidOnAuction.jsp">
 					<input type="hidden" name="aID" value="<%= aID%>"/>
 					<input type="submit" value="Re-enter values">
 				</form>
-				<%	
-			} else {
-				String insertBid = "INSERT INTO Bids (aID, username, price, timestamp, bidLimit, maxIncrement)"
-						+ "VALUES (?, ?, ?, ?, ?, ?)";
-				PreparedStatement bidPs = connect.prepareStatement(insert);
-				ps.setString(1, aID);
-				ps.setString(2, (String)session.getAttribute("user"));
-				ps.setInt(3, Integer.parseInt(bidAmount));
-				ps.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
-				ps.setInt(5, Integer.parseInt(upperLimit));
-				ps.setInt(6, Integer.parseInt(bidIncrement));
 				
+			<%	} else {
+				String insertBid = "INSERT INTO Bids (aID, username, price, timestamp, bidLimit, maxIncrement) VALUES (?, ?, ?, ?, ?, ?)";
+				PreparedStatement bidPs = connect.prepareStatement(insertBid);
+				bidPs.setString(1, aID);
+				bidPs.setString(2, (String)session.getAttribute("user"));
+				bidPs.setInt(3, Integer.parseInt(bidAmount));
+				bidPs.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
+				bidPs.setInt(5, Integer.parseInt(upperLimit));
+				bidPs.setInt(6, Integer.parseInt(bidIncrement));
+				bidPs.execute();
+				
+				bidPs.close();
+				
+				//update the autobids
+				AutoBids.updateAutoBids(db, connect, aID);
+				
+				//update the highest bid
+				insert = "select max(b.price) from bids b join auction a on b.aid = a.aid where b.aid = ?;";
+				ps = connect.prepareStatement(insert);    
+				ps.setString(1,aID);
+				results = ps.executeQuery();
+				if(results.next()) {
+					highestBid = results.getInt(1);			
+				}
+				else {
+					out.println("<h4>Error: Inactive auction not found.</h4>");
+				}
+				ps.close();
+				results.close();%>
+				
+				<h5>Automatic bid successful!</h5>
+				
+				<h5>Current highest bid amount: <%=highestBid%></h5>
+			<% } %>
 
-			}
-		%>
-	
-		<h5>Initial Price: <%=initialPrice%></h5>
-		<h5>Highest Bid: <%=highestBid%></h5>
-		
-		<%
-		
-		%>
-		
-	
 	</body>
 	
 </html>

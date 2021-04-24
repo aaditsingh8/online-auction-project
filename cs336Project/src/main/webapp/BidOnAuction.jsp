@@ -12,6 +12,7 @@
 	<body>
 		<!--  need to get the auction info from db -->
 		<form action="AuctionInfo.jsp">
+			<input type="hidden" name="aID" value="<%= request.getParameter("aID") %>"/>
 			<input type="submit" value="back">
 		</form>
 		
