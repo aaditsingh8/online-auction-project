@@ -38,6 +38,9 @@
 							<li>
 								<a href="UserAuctionsSold.jsp">Closed Auctions</a>
 							</li>
+							<li>
+								<a href="CreateAuction.jsp">Create an Auction</a>
+							</li>
 						</ul>
 					</li>
 					<li> Other Auctions

@@ -10,14 +10,17 @@
 <link rel="stylesheet" href="style.css?v=1.0" />
 </head>
 <body>
+		<form action="LoggedIn.jsp">
+			<input type="submit" value="back">
+		</form>
+		
 	<% if(session.getAttribute("user") == null) {
     	 	response.sendRedirect("LoginPage.jsp");
         } else { %>
-	<%@ include file="NavBar.jsp"%>
 	<div class="content">
 		<form action="CreateAuctionHandler.jsp" method="POST">
 			<h2>Auction Info</h2>
-			<label for="name">Name</label>
+			<label for="name">Auction/Item Name</label>
 			<input type="text" name="name" id="name" placeholder="Enter name" required> <br>
 			<table>
 				<tr><td>Enter closing date :</td> <td><input type = "datetime" name = "date" placeholder = "dd-MM-yyyy hh:mm:ss" required></td><tr>
