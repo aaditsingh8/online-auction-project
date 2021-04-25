@@ -12,7 +12,6 @@
 	<body>
 		<!--  need to get the auction info from db -->
 		<form action="AuctionInfo.jsp">
-			<input type="hidden" name="aID" value="<%= request.getParameter("aID") %>"/>
 			<input type="submit" value="back">
 		</form>
 		
@@ -26,9 +25,9 @@
 			PreparedStatement ps = connect.prepareStatement(insert);    
 			ps.setString(1,aID);
 			ResultSet results = ps.executeQuery();
-			int highestBid = 0; 
+			float highestBid = 0; 
 			if(results.next()) {
-				highestBid = results.getInt(1);			
+				highestBid = results.getFloat(1);			
 			}
 			else {
 				out.println("<h4>Error: Inactive auction not found.</h4>");
@@ -44,16 +43,10 @@
 	        <input type="submit" value="Manual Bid" />
 		</form>
 		<h5>Create an automatic bid:</h5>
-		<form action="automaticBid.jsp" method="POST">
-			<input type="hidden" name="aID" value="<%= aID %>"/>
-			<label>Bid Amount:</label> 
-				<input type="text" name="bidAmount" required/> <br>
-			<label>Secret upper limit:</label> 
-				<input type="text" name="upperLimit" /> <br>
-			<label>Bid Increment:</label> 
-				<input type="text" name="bidIncrement"/> <br>
-			<button type="submit" value="Submit"/>Create Autobid</button>
-		</form>	
+		<form action="automaticBid.jsp" method="post">
+	        <input type="hidden" name="aID" value="<%= aID %>"/>
+	        <input type="submit" value="Automatic Bid" />
+		</form>
 		<script></script>
 	</body>
 </html>

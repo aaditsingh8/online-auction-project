@@ -11,7 +11,7 @@
 	</head>
 	<body>
 		<form action="LoggedIn.jsp">
-			<input type="submit" value="home">
+			<input type="submit" value="back">
 		</form>
 		
 		<h1>Buy Me</h1>
@@ -60,8 +60,10 @@
 				isActive = results.getBoolean(12);
 				seller = results.getString(13);
 				if(!isActive) {
-					String insert2 = "SELECT username, price, aID " +
-									 "FROM bought " +
+					String insert2 = "SELECT b.username, b.price, a.aID " +
+									"FROM bought b " +
+									"JOIN sells s USING (itemID) " +
+									"JOIN auction a USING (aID) " +
 									 "WHERE aID = ? " +
 									 "UNION " +
 									 "SELECT 'No Buyer' username, 'Not Sold' price, aID " +
@@ -342,7 +344,7 @@
 			<p>User Options:</p>
 			<table>
 				<tr>
-					<% if (!seller.equals(session.getAttribute("user").toString()) && isActive) { %>
+					<% if (!seller.equals(session.getAttribute("user").toString())) { %>
 						<td>
 							<form action="IndividualAuctionWinner.jsp" method="post">
 						        <input type="hidden" name="aID" value="<%= aID %>"/>

@@ -18,15 +18,15 @@
 			String upperLimit = request.getParameter("upperLimit");
 			String bidIncrement = request.getParameter("bidIncrement");
 			
-			int highestBid=0; 
-			int initialPrice=0;
-			int minIncrement=0;
+			float highestBid=0.0f; 
+			float initialPrice=0.0f;
+			float minIncrement=0.0f;
 			
 			Connection conn = null;
-			PreparedStatement ps1 = null;
-			ResultSet rs = null;
-			ApplicationDB database = new ApplicationDB();
-			conn = database.getConnection();
+
+			String url = "jdbc:mysql://localhost:3306/auctionproject";
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			conn = DriverManager.getConnection(url, "root", "Daniel123909@");
 			
 			
 			
@@ -36,8 +36,8 @@
 			ps.setString(1,aID);
 			ResultSet results = ps.executeQuery();
 			if(results.next()) {
-				initialPrice = results.getInt(2);
-				minIncrement = results.getInt(3);
+				initialPrice = results.getFloat(2);
+				minIncrement = results.getFloat(3);
 				
 			}
 			else {
