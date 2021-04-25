@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class AutoBids{
-	public static void updateAutoBids(ApplicationDB db, Connection connect, String aID, int highestBid, Boolean newAutoBid ) throws SQLException {
+	public static void updateAutoBids(ApplicationDB db, Connection connect, String aID, double highestBid, Boolean newAutoBid ) throws SQLException {
 				
 		connect = db.getConnection(); 
 		
@@ -19,16 +19,16 @@ public class AutoBids{
 		
 		String username1 = ""; 
 		String username2= "";
-		int upperLimit1 = 0; 
-		int upperLimit2 = 0; 
-		int increment1 = 0; 
-		int increment2 = 0; 
+		double upperLimit1 = 0; 
+		double upperLimit2 = 0; 
+		double increment1 = 0; 
+		double increment2 = 0; 
 		
-		int currentAmt = 0;
-		int currentAmtNoAuto = 0;
+		double currentAmt = 0;
+		double currentAmtNoAuto = 0;
 		//check how many autobids there are and get their info
 		// ignore autobids that are already maxed out? 
-		int numAutoBids = 0;  
+		double numAutoBids = 0;  
 		boolean l1AtLimit = false; 
 				
 		if(autoBidResults.last()) {
@@ -69,7 +69,7 @@ public class AutoBids{
 		
 		if (numAutoBids == 2){
 			//do the incrementing increment1 = 5, increment2 = 10, upperLimit = 50, upperLimit = 20
-			int i = 1; 
+			double i = 1; 
 			while (currentAmt <= upperLimit1-increment1 && currentAmt <= upperLimit2-increment2){ // 5 15 20... user1 can still increment to 25
 				if (i % 2 == 1){
 					currentAmt += increment1; 
@@ -80,8 +80,8 @@ public class AutoBids{
 			}
 						
 			//determine which user outbid the other
-			int lesserLimit = 0; 
-			int greaterLimit = 0; 
+			double lesserLimit = 0; 
+			double greaterLimit = 0; 
 			if (upperLimit1 < upperLimit2){
 				//the second user outbids
 				lesserLimit = upperLimit1; 
@@ -89,7 +89,7 @@ public class AutoBids{
 				
 				//update the bid value of the first user
 				autosPs = connect.prepareStatement(update);
-				autosPs.setInt(1, currentAmt);
+				autosPs.setDouble(1, currentAmt);
 				autosPs.setString(2, username1);
 				autosPs.setInt(3, Integer.parseInt(aID));
 				System.out.println("second user has outbid.\n firstuser bid amt: " + autosPs);
@@ -102,7 +102,7 @@ public class AutoBids{
 				
 				//update the bid value of the second user
 				autosPs = connect.prepareStatement(update);
-				autosPs.setInt(1, currentAmt);
+				autosPs.setDouble(1, currentAmt);
 				autosPs.setString(2, username2);
 				autosPs.setInt(3, Integer.parseInt(aID));
 				autosPs.execute();
@@ -111,7 +111,7 @@ public class AutoBids{
 				//send alert to first user
 				ps_alert.setString(1, username1);
 				results_alert = ps_alert.executeQuery();
-				int alertNum = 0;
+				double alertNum = 0;
 				if(results_alert.next()) {
 					alertNum = Integer.parseInt(results_alert.getString(2));
 				}
@@ -125,7 +125,7 @@ public class AutoBids{
 						+ "'Check Auction #" + aID + "Click <a href=\"AuctionInfo.jsp?aID=" + aID + "\">here</a> to view auction information.')";
 				PreparedStatement stmt = connect.prepareStatement(temp);
 				stmt.setString(1, username1);
-				stmt.setInt(2, alertNum);
+				stmt.setDouble(2, alertNum);
 				stmt.executeUpdate();				
 				stmt.close();
 
@@ -136,7 +136,7 @@ public class AutoBids{
 				
 				//update the bid value of the second user
 				autosPs = connect.prepareStatement(update);
-				autosPs.setInt(1, currentAmt);
+				autosPs.setDouble(1, currentAmt);
 				autosPs.setString(2, username2);
 				autosPs.setString(3, aID);
 				System.out.println("first user has outbid.\n seconduser bid amt: " + autosPs);
@@ -150,7 +150,7 @@ public class AutoBids{
 				
 				//update the bid value of the first user
 				autosPs = connect.prepareStatement(update);
-				autosPs.setInt(1, currentAmt);
+				autosPs.setDouble(1, currentAmt);
 				autosPs.setString(2, username1);
 				autosPs.setInt(3, Integer.parseInt(aID));
 				System.out.println("first user bid amt: " + autosPs);
@@ -161,7 +161,7 @@ public class AutoBids{
 				ps_alert.setString(1, username2);
 				results_alert = ps_alert.executeQuery();
 				
-				int alertNum = 0;
+				double alertNum = 0;
 				if(results_alert.next()) {
 					alertNum = Integer.parseInt(results_alert.getString(2));
 				}
@@ -175,7 +175,7 @@ public class AutoBids{
 						+ "'Check Auction #" + aID + "Click <a href=\"AuctionInfo.jsp?aID=" + aID + "\">here</a> to view auction information.')";
 				PreparedStatement stmt = connect.prepareStatement(temp);
 				stmt.setString(1, username2);
-				stmt.setInt(2, alertNum);
+				stmt.setDouble(2, alertNum);
 				stmt.executeUpdate();				
 				stmt.close();
 			}
@@ -194,7 +194,7 @@ public class AutoBids{
 				if (highestBid + increment1 <= upperLimit1) {
 					highestBid += increment1;
 					autosPs = connect.prepareStatement(update);
-					autosPs.setInt(1, highestBid);
+					autosPs.setDouble(1, highestBid);
 					autosPs.setString(2, username1);
 					autosPs.setString(3, aID);
 					autosPs.execute();
@@ -206,7 +206,7 @@ public class AutoBids{
 					ps_alert = connect.prepareStatement(alert);
 					results_alert = ps_alert.executeQuery();
 					
-					int alertNum = 0;
+					double alertNum = 0;
 					if(results_alert.next()) {
 						alertNum = Integer.parseInt(results_alert.getString(2));
 					}
@@ -220,7 +220,7 @@ public class AutoBids{
 							+ "'Check Auction #" + aID + "Click <a href=\"AuctionInfo.jsp?aID=" + aID + "\">here</a> to view auction information.')";
 					PreparedStatement stmt = connect.prepareStatement(temp);
 					stmt.setString(1, username1);
-					stmt.setInt(2, alertNum);
+					stmt.setDouble(2, alertNum);
 					stmt.executeUpdate();				
 					stmt.close();
 				}
@@ -232,7 +232,7 @@ public class AutoBids{
 				if (highestBid + increment2 <= upperLimit2) {
 					highestBid += increment2;
 					autosPs = connect.prepareStatement(update);
-					autosPs.setInt(1, highestBid);
+					autosPs.setDouble(1, highestBid);
 					autosPs.setString(2, username2);
 					autosPs.setString(3, aID);
 					autosPs.execute();		
@@ -243,7 +243,7 @@ public class AutoBids{
 					ps_alert = connect.prepareStatement(alert);
 					results_alert = ps_alert.executeQuery();
 					
-					int alertNum = 0;
+					double alertNum = 0;
 					if(results_alert.next()) {
 						alertNum = Integer.parseInt(results_alert.getString(2));
 					}
@@ -257,7 +257,7 @@ public class AutoBids{
 							+ "'Check Auction #" + aID + "Click <a href=\"AuctionInfo.jsp?aID=" + aID + "\">here</a> to view auction information.')";
 					PreparedStatement stmt = connect.prepareStatement(temp);
 					stmt.setString(1, username2);
-					stmt.setInt(2, alertNum);
+					stmt.setDouble(2, alertNum);
 					stmt.executeUpdate();				
 					stmt.close();
 				}

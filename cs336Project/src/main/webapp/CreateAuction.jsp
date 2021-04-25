@@ -23,7 +23,7 @@
 			<label for="name">Auction/Item Name</label>
 			<input type="text" name="name" id="name" placeholder="Enter name" required> <br>
 			<table>
-				<tr><td>Enter closing date :</td> <td><input type = "datetime" name = "date" placeholder = "dd-MM-yyyy hh:mm:ss" required></td><tr>
+				<tr><td>Enter closing date :</td> <td><input type = "datetime" name = "date" placeholder = "YYYY-MM-DD hh:mm:ss" required></td><tr>
 			</table>
 			<label for="minPrice">Minimum Price (hidden from bidders)</label>
 			<input type="number" step="0.01" name="minPrice" placeholder="0.00" min="0.00" required> <br>	
@@ -34,12 +34,12 @@
 			<h2>Item Info</h2>
 			
 	    	
-			<label for="Brand">Brand</label>
+			<label for="Brand">Brand (required)</label>
 			<input type="text" name="brand" id="brand" placeholder="Enter brand name" required> <br>
 			
 			<br> 
-			<label for="Size">Size</label>
-			<input type="text" name="size" id="size" placeholder="Enter size"> <br>
+			<label for="Size">Size (required)</label>
+			<input type="text" name="size" id="size" placeholder="Enter size" required> <br>
 			<br>
 			 
 			<label for="Material">Material</label>

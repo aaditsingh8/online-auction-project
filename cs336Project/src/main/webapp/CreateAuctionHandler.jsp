@@ -43,7 +43,7 @@ import java.sql.Date;
 		minPrice = Float.parseFloat(request.getParameter("minPrice"));
 		minIncrement = Float.parseFloat(request.getParameter("minIncrement"));
 		String close = request.getParameter("date");
-		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-DD hh:mm:ss");
 		java.util.Date date = sdf.parse(close);
 		java.sql.Date closeDate = new java.sql.Date(date.getTime());
 		String username = session.getAttribute("user").toString();
@@ -106,110 +106,95 @@ import java.sql.Date;
 		
 		
 		// Make sure all the fields are entered
-		if(category != null  && !category.isEmpty()
+		/*
+		category != null  && !category.isEmpty()
 				&& brand != null && !brand.isEmpty() 
-				
-				
-			
 				&& initPrice != 0
 				&& minPrice != 0
-				&& minIncrement != 0){
-			
+				&& minIncrement != 0
+		*/ 
+       	rs = ps.getGeneratedKeys();
+       	rs.next();
+       	int itemID = rs.getInt(1);
+		int aID = itemID;
+       	
 		// Build the SQL query with placeholders for parameters
-			String item = "INSERT INTO Clothes (name, category, brand, material, size, color)"
-					+ "VALUES(?, ?, ?, ?, ?, ?)";
-			ps = conn.prepareStatement(item, Statement.RETURN_GENERATED_KEYS);
-			
-			//auction
-			String auction = "INSERT INTO Auction (initPrice, minIncrement, closeDateTime, isActive, minPrice, username)"
-					+ "VALUES(?,?,?,?,?,?)";
-			ps1 = conn.prepareStatement(auction, Statement.RETURN_GENERATED_KEYS);
+		String item = "INSERT INTO Clothes (name, category, brand, material, size, color, itemid) VALUES (?, ?, ?, ?, ?, ?, ?)";
+		ps = conn.prepareStatement(item, Statement.RETURN_GENERATED_KEYS);
 		
-			// Add parameters to query
-			ps.setString(1, name);
-			ps.setString(2, category);
-			ps.setString(3, brand);
-			ps.setString(4, material);
-			ps.setString(5, size);
-			ps.setString(6, color);			
+		//auction
+		String auction = "INSERT INTO Auction (initPrice, minIncrement, closeDateTime, isActive, minPrice, username)"
+				+ "VALUES(?,?,?,?,?,?)";
+		ps1 = conn.prepareStatement(auction, Statement.RETURN_GENERATED_KEYS);
+	
+		// Add parameters to query
+		ps.setString(1, name);
+		ps.setString(2, category);
+		ps.setString(3, brand);
+		ps.setString(4, material);
+		ps.setString(5, size);
+		ps.setString(6, color);			
+		ps.setInt(7, aID);		
+
+		//auction
+		ps1.setFloat(1, initPrice);
+		ps1.setFloat(2, minIncrement);
+		ps1.setDate(3, closeDate);
+		ps1.setInt(4, 1);
+		ps1.setFloat(5, minPrice);
+		ps1.setString(6, username);
 			
-			//auction
-			ps1.setFloat(1, initPrice);
-			ps1.setFloat(2, minIncrement);
-			ps1.setDate(3, closeDate);
-			ps1.setInt(4, 1);
-			ps1.setFloat(5, minPrice);
-			ps1.setString(6, username);
-			
-			
-			int result = 0;
-			int result1 = 0;
-	        result = ps.executeUpdate();
-	        result1 = ps1.executeUpdate();
-	        if (result < 1 && result1 < 1) {
-	        	out.println("Error: Auction creation failed.");
-	        } else {
-	        	rs = ps.getGeneratedKeys();
-	        	rs.next();
-	        	int itemID = rs.getInt(1);
-				int aID = itemID;
-	        	
-	        	//sells table
-	        	String sells = "INSERT INTO Sells (aID, itemID)"
-						+ "VALUES(?,?)";
-	        	psSell = conn.prepareStatement(sells, Statement.RETURN_GENERATED_KEYS);
-	        	
-	        	psSell.setInt(1, aID);
-	        	psSell.setInt(2, itemID);
-	        	
-	        	int result2 = 0;
-	        	result2 = psSell.executeUpdate();
-	        	
-	        	if (category.equalsIgnoreCase("hats")) { 
-	        		//System.out.println(hats_type);
-	        		String hats = "INSERT INTO Hats VALUES (" + itemID + ", " + hats_type + ")";
-							
-	        		pslow = conn.prepareStatement(hats, Statement.RETURN_GENERATED_KEYS);
-	        		
-	        		pslow.executeUpdate();
-	        		
-	        	} else if (category.equalsIgnoreCase("lowers")) {
-                    
-                    String pants = "INSERT INTO lowers VALUES (" + itemID + ", " + lowers_length + ")";
-                    pshat = conn.prepareStatement(pants, Statement.RETURN_GENERATED_KEYS);
-                    
-                   pshat.executeUpdate();
-                   
-				} else if (category.equalsIgnoreCase("shirts")) {
-                    
-                    String shirts = "INSERT INTO shirts VALUES (" + itemID + ", " + shirts_neckline + ", " + shirts_buttons + ", " + shirts_sleeves + ")";
-                    pshirt = conn.prepareStatement(shirts, Statement.RETURN_GENERATED_KEYS);
-                    
-                   pshirt.executeUpdate();
-                   
-				} else if (category.equalsIgnoreCase("shoes")) {
-                    
-                    String shoes = "INSERT INTO shoes VALUES (" + itemID + ", " + shoes_laces + ", " + shoes_heels + ")";
-                    pshoes = conn.prepareStatement(shoes, Statement.RETURN_GENERATED_KEYS);
-                    
-                   pshoes.executeUpdate();
-				} else if (category.equalsIgnoreCase("socks")) {
-                    
-                    String socks = "INSERT INTO socks VALUES (" + itemID + ", " + socks_length + ")";
-                    psocks = conn.prepareStatement(socks, Statement.RETURN_GENERATED_KEYS);
-                    
-                   psocks.executeUpdate();
-				}
-	        	
-	        	response.sendRedirect("AuctionInfo.jsp?aID=" + aID); //success
-	        	return;
-	        }
-		} else {
-			response.sendRedirect("createAuctionError.jsp"); //error
-			return;
+       	//sells table
+       	String sells = "INSERT INTO Sells (aID, itemID) VALUES (?,?)";
+       	psSell = conn.prepareStatement(sells, Statement.RETURN_GENERATED_KEYS);
+       	
+       	psSell.setInt(1, aID);
+       	psSell.setInt(2, itemID);
+       	
+       	int result2 = 0;
+       	result2 = psSell.executeUpdate();
+        	
+       	if (category.equalsIgnoreCase("hats")) { 
+       		//System.out.println(hats_type);
+       		String hats = "INSERT INTO Hats VALUES (" + itemID + ", " + hats_type + ")";
+					
+       		pslow = conn.prepareStatement(hats, Statement.RETURN_GENERATED_KEYS);
+       		
+       		pslow.executeUpdate();
+       		
+       	} else if (category.equalsIgnoreCase("lowers")) {
+                  
+                  String pants = "INSERT INTO lowers VALUES (" + itemID + ", " + lowers_length + ")";
+                  pshat = conn.prepareStatement(pants, Statement.RETURN_GENERATED_KEYS);
+                  
+                 pshat.executeUpdate();
+                 
+		} else if (category.equalsIgnoreCase("shirts")) {
+                  
+                  String shirts = "INSERT INTO shirts VALUES (" + itemID + ", " + shirts_neckline + ", " + shirts_buttons + ", " + shirts_sleeves + ")";
+                  pshirt = conn.prepareStatement(shirts, Statement.RETURN_GENERATED_KEYS);
+                  
+                 pshirt.executeUpdate();
+                 
+		} else if (category.equalsIgnoreCase("shoes")) {
+                  
+                  String shoes = "INSERT INTO shoes VALUES (" + itemID + ", " + shoes_laces + ", " + shoes_heels + ")";
+                  pshoes = conn.prepareStatement(shoes, Statement.RETURN_GENERATED_KEYS);
+                  
+                 pshoes.executeUpdate();
+		} else if (category.equalsIgnoreCase("socks")) {
+                  
+                  String socks = "INSERT INTO socks VALUES (" + itemID + ", " + socks_length + ")";
+                  psocks = conn.prepareStatement(socks, Statement.RETURN_GENERATED_KEYS);
+                  
+                 psocks.executeUpdate();
 		}
+       	
+       	response.sendRedirect("AuctionInfo.jsp?aID=" + aID); //success
+       	return;
+
 	} catch(Exception e) {
-        response.sendRedirect("createAuctionError.jsp"); // MySql error such as Start Date before End Date
+        //response.sendRedirect("createAuctionError.jsp"); // MySql error such as Start Date before End Date
         e.printStackTrace();
     } finally {
         try { ps.close(); } catch (Exception e) {}

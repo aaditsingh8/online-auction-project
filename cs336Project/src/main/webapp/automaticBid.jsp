@@ -21,8 +21,8 @@
 			String upperLimit = request.getParameter("upperLimit");
 			String bidIncrement = request.getParameter("bidIncrement");
 			
-			int highestBid=0; 
-			int initialPrice=0;
+			double highestBid=0; 
+			double initialPrice=0;
 			//cannot bid less than current bid price
 			//cannot bid less than initial price
 			ApplicationDB db = new ApplicationDB();
@@ -33,7 +33,7 @@
 			ps.setString(1,aID);
 			ResultSet results = ps.executeQuery();
 			if(results.next()) {
-				initialPrice = results.getInt(2);			
+				initialPrice = results.getDouble(2);			
 			}
 			else {
 				out.println("<h4>Error: Inactive auction not found.</h4>");
@@ -43,7 +43,7 @@
 			ps.setString(1,aID);
 			results = ps.executeQuery(); 
 			if(results.next()) {
-				highestBid = results.getInt(1);			
+				highestBid = results.getDouble(1);			
 			}
 			else {
 				out.println("<h4>Error: Inactive auction not found.</h4>");
@@ -67,7 +67,7 @@
 				PreparedStatement bidPs = connect.prepareStatement(insertBid);
 				bidPs.setString(1, aID);
 				bidPs.setString(2, (String)session.getAttribute("user"));
-				bidPs.setInt(3, Integer.parseInt(bidAmount));
+				bidPs.setDouble(3, Integer.parseInt(bidAmount));
 				bidPs.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
 				bidPs.setInt(5, Integer.parseInt(upperLimit));
 				bidPs.setInt(6, Integer.parseInt(bidIncrement));

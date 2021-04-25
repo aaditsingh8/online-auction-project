@@ -69,10 +69,22 @@
 						<a href="Wishlist.jsp">See your Wishlist</a>
 					</li>
 				</ul>
-			</li>
+			</li> 
 			<li>
 				<a href="Alerts.jsp">Alerts</a>
-			</li>
+			</li> <li>Admin tools
+				<ul>
+					<li>
+		                <a href="BuyMeForum.jsp">Q/A</a>
+		            </li>
+		            <li>
+		                <a href="RepPortal.jsp">Rep Portal</a>
+		            </li>
+		            <li>
+		                <a href="adminPortal.jsp">Admin Portal</a>
+		            </li>
+	            </ul>
+            </li>
 		</ul>
 
 	</body>
