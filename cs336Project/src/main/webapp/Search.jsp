@@ -16,6 +16,19 @@
 	</head>
 	<body>
 		<script>			
+			function sortErrors(form){
+				var flag = true;
+				if(!!(form.sort.value === 'no sort' & form.order.value !== 'no order')){
+					alert('If you do not wish a sort, keep order as "no order".')
+					flag = false;
+				}
+				if(!!(form.sort.value !== 'no sort' & form.order.value === 'no order')){
+					alert('If you do not wish a sort, keep sort as "no sort".')
+					flag = false;
+				}
+				return flag;
+			}
+		
 			function ifOther(form){
 				var flag = true;
 				if(!!(form.category.value === 'other' & form.categoryOther.value.length === 0)){
@@ -72,7 +85,7 @@
 	    </form>
 		
 		<h1>Buy Me</h1>
-		<form method="post" action="Result.jsp" onsubmit="return !!(ifOther(this) & notOther(this));">
+		<form method="post" action="Result.jsp" onsubmit="return !!(sortErrors(this) & ifOther(this) & notOther(this));">
 			<table>
 				<tr>
 					<td>Find:</td>
@@ -87,8 +100,8 @@
 				<tr>
 					<td></td>
 					<td style="text-align: right;">
-						<input type="reset" value="reset" size="15"/>
 						<input type="submit" value="search" size="15"/>
+						<input type="reset" value="reset" size="15"/>
 					</td>
 				</tr>
 			</table>
@@ -97,6 +110,26 @@
 			Search with keywords separated by spaces ' ' to find auctions with the desired keywords.<br>
 			The following parameters are set to "any" by default, you can customize those to specialize your searches.<br>
 			You can leave the search bar empty to search based on the parameters below only.<br><br>
+			
+			<table>
+				<tr>
+					<td>Sort by:</td>
+					<td>
+						<select name="sort" required>
+							<option>Initial Price</option>
+							<option>Closing Time</option>
+							<option selected="selected">no sort</option>
+						</select>
+					</td>
+					<td>
+						<select name="order" required>
+							<option>Lowest to Highest</option>
+							<option>Highest to Lowest</option>
+							<option selected="selected">no order</option>
+						</select>
+					</td>
+				</tr>
+			</table>
 			
 	    	<table>
 	    		<thead>

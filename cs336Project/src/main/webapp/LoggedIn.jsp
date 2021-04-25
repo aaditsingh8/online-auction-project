@@ -8,6 +8,15 @@
 	<head>
 		<meta charset="ISO-8859-1">
 		<title>Buy Me User Home</title>
+		<style>
+			td, th {
+				padding: 5px;
+			}
+			table, thead {
+				border: 1px solid black;
+				border-collapse: collapse;
+			}
+		</style>
 	</head>
 	<body>
 		<%
@@ -28,15 +37,17 @@
 		
 		<h4>Options</h4>		
 		<ul>
-			<li> Auction Infomation
+			<li> Auction Options
 				<ul>
+					<li><a href="---.jsp">Create Auction</a></li>
+					<li><a href="Search.jsp">Search for Auctions</a></li>
 					<li> Your Auctions
 						<ul>
 							<li>
-								<a href="UserAuctions.jsp">Active Auctions</a>
+								<a href="UserAuctions.jsp">See your Active Auctions</a>
 							</li>
 							<li>
-								<a href="UserAuctionsSold.jsp">Closed Auctions</a>
+								<a href="UserAuctionsSold.jsp">See your Closed Auctions</a>
 							</li>
 						</ul>
 					</li>

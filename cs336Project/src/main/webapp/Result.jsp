@@ -88,17 +88,18 @@
 				
 				keywords = request.getParameter("search").toString().split(" ");
 				
-				initial = "WHERE ((c.name = '" + keywords[0] + "') ";
+				// initial = "WHERE ((c.name = '" + keywords[0] + "') ";
+				initial = "WHERE (c.name = '" + request.getParameter("search").toString() + "') ";
 				middle = "WHERE ((c.name LIKE '" + keywords[0] + "%') ";
 				end = "WHERE ((c.name LIKE '%" + keywords[0] + "%') ";
 				
 				for(int i = 1; i < keywords.length; i++) {
-					initial += "OR (c.name = '" + keywords[i] + "') ";
+					// initial += "OR (c.name = '" + keywords[i] + "') ";
 					middle += "OR (c.name LIKE '" + keywords[i] + "%') ";
 					end += "OR (c.name LIKE '%" + keywords[i] + "%') ";
 				}
 				
-				initial += ") ";
+				// initial += ") ";
 				middle += ") ";
 				end += ") ";
 				
@@ -128,6 +129,23 @@
 				insert = base + "WHERE " + params_state;
 				
 			}
+			
+			// SORTING BY CRITERIA
+			
+			if(!request.getParameter("sort").equalsIgnoreCase("no sort")) {
+				insert += "ORDER BY ";
+				if(request.getParameter("sort").equalsIgnoreCase("Initial Price")) {
+					insert += "initPrice ";
+				} else {
+					insert += "closeDateTime ";
+				}
+				
+				if(request.getParameter("order").equalsIgnoreCase("Lowest to Highest")) {
+					insert += "ASC";
+				} else {
+					insert += "DESC";
+				}
+			};
 			
 			// out.println(insert + "<br><br>");
 			
