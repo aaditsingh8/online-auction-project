@@ -11,7 +11,7 @@
 	</head>
 	<body>
 		<form action="LoggedIn.jsp">
-			<input type="submit" value="back">
+			<input type="submit" value="home">
 		</form>
 		
 		<h1>Buy Me</h1>
@@ -190,7 +190,7 @@
 				
 	// LISTING CATEGORY SPECIFIC FEATURES
 	
-				if (category.equalsIgnoreCase("hat")) {
+				if (category.equalsIgnoreCase("hats")) {
 					String insert_temp = "SELECT * " +
 									   "FROM sells " +
 									   "JOIN hats USING (itemID) " +
@@ -219,7 +219,7 @@
 					ps_temp.close();
 					results_temp.close();
 
-				} else if (category.equalsIgnoreCase("lower")) {
+				} else if (category.equalsIgnoreCase("lowers")) {
 					String insert_temp2 = "SELECT * " +
 									   "FROM sells " +
 									   "JOIN lowers USING (itemID) " +
@@ -248,7 +248,7 @@
 					ps_temp2.close();
 					results_temp2.close();
 
-				} else if (category.equalsIgnoreCase("shirt")) {
+				} else if (category.equalsIgnoreCase("shirts")) {
 					String insert_temp3 = "SELECT * " +
 									   "FROM sells " +
 									   "JOIN shirts USING (itemID) " +
@@ -342,9 +342,9 @@
 			<p>User Options:</p>
 			<table>
 				<tr>
-					<% if (!seller.equals(session.getAttribute("user").toString())) { %>
+					<% if (!seller.equals(session.getAttribute("user").toString()) && isActive) { %>
 						<td>
-							<form action="BidOnAuction.jsp" method="post">
+							<form action="IndividualAuctionWinner.jsp" method="post">
 						        <input type="hidden" name="aID" value="<%= aID %>"/>
 						        <input type="submit" value="Bid on Item" />
 						    </form>

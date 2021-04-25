@@ -10,6 +10,10 @@
 		<title>Automatic Bid for Auction: <%= request.getParameter("aID") %></title>
 	</head>
 	<body>
+		<form action="LoggedIn.jsp">
+			<input type="submit" value="Back to login">
+		</form>
+		
 		<h1>Create an automatic bid</h1>
 		<%
 			String bidAmount = request.getParameter("bidAmount");
@@ -72,7 +76,7 @@
 				bidPs.close();
 				
 				//update the autobids
-				AutoBids.updateAutoBids(db, connect, aID);
+				AutoBids.updateAutoBids(db, connect, aID, highestBid, true);
 				
 				//update the highest bid
 				insert = "select max(b.price) from bids b join auction a on b.aid = a.aid where b.aid = ?;";

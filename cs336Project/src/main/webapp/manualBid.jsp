@@ -25,9 +25,8 @@
 			Connection conn = null;
 			PreparedStatement ps1 = null;
 			ResultSet rs = null;
-			String url = "jdbc:mysql://localhost:3306/auctionproject";
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			conn = DriverManager.getConnection(url, "root", "Daniel123909@");
+			ApplicationDB database = new ApplicationDB();
+			conn = database.getConnection();
 			
 			
 			
