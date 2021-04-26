@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.servlet.*;
 
 public class AutoBids{
 	public static void updateAutoBids(ApplicationDB db, Connection connect, String aID, double highestBid, Boolean newAutoBid ) throws SQLException {
@@ -60,21 +61,77 @@ public class AutoBids{
 		}
 		
 		String update ="";
-		update = "update bids set price = ? where username = ? and aID = ? and bidLimit IS NOT NULL";
+		update = "update bids set price = ? WHERE timestamp = (SELECT max(timestamp) FROM bids WHERE aID = ? and username = ?) AND bidLimit IS NOT NULL";
 		
 		String alert = "SELECT username, max(alertNum) FROM alerts WHERE username = ? GROUP BY username";
 		PreparedStatement ps_alert = connect.prepareStatement(alert);
 		ResultSet results_alert;
 		
+		if (username1.equalsIgnoreCase(username2) && newAutoBid == true) {
+			System.out.println("same user");
+			//if user updates their autobid
+			if (upperLimit2 > upperLimit1 ) {
+				autosPs = connect.prepareStatement(update);
+				autosPs.setDouble(1, upperLimit1);
+				autosPs.setString(2, username1);
+				autosPs.setInt(3, Integer.parseInt(aID));
+				System.out.println("user has updated their autobid");
+				autosPs.execute();
+				return;
+			} 
+		}
+		
+		if (newAutoBid == false) {
+			if (highestBid >= upperLimit2) {
+				//max out the bidder's price
+				System.out.println(upperLimit2 + " " + username2);
+				autosPs = connect.prepareStatement(update);
+				autosPs.setDouble(1, upperLimit2);
+				autosPs.setString(2, username2);
+				autosPs.setString(3, aID);
+				autosPs.execute();	
+				
+				System.out.println("sending alert to last autobidder after manual bid");
+				ps_alert = connect.prepareStatement(alert);
+				ps_alert.setString(1, username2);
+				results_alert = ps_alert.executeQuery();
+				
+				double alertNum = 0;
+				if(results_alert.next()) {
+					alertNum = Integer.parseInt(results_alert.getString(2));
+				}
+				alertNum++;
+				
+				ps_alert.close();
+				results_alert.close();
+				
+				// CREATING ALERT
+				String temp = "INSERT INTO alerts (username, alertNum, subject, text) VALUES (?, ?, 'A user has bidded higher than your upperlimit', "
+						+ "'Check Auction #" + aID + "Click <a href=\"AuctionInfo.jsp?aID=" + aID + "\">here</a> to view auction information.')";
+				PreparedStatement stmt = connect.prepareStatement(temp);
+				stmt.setString(1, username2);
+				stmt.setDouble(2, alertNum);
+				stmt.executeUpdate();				
+				stmt.close();
+			}
+		}
 		
 		if (numAutoBids == 2){
 			//do the incrementing increment1 = 5, increment2 = 10, upperLimit = 50, upperLimit = 20
-			double i = 1; 
-			while (currentAmt <= upperLimit1-increment1 && currentAmt <= upperLimit2-increment2){ // 5 15 20... user1 can still increment to 25
+			int i = 1; 
+			while (true){ // 5 15 20... user1 can still increment to 25
 				if (i % 2 == 1){
-					currentAmt += increment1; 
+					if (currentAmt <= upperLimit1-increment1) {
+						currentAmt += increment1; 
+					} else {
+						break;
+					}
 				} else{
-					currentAmt += increment2;
+					if (currentAmt <= upperLimit2-increment2) {
+						currentAmt += increment2; 
+					} else {
+						break;
+					}
 				}
 				i++; 
 			}
@@ -82,6 +139,7 @@ public class AutoBids{
 			//determine which user outbid the other
 			double lesserLimit = 0; 
 			double greaterLimit = 0; 
+			
 			if (upperLimit1 < upperLimit2){
 				//the second user outbids
 				lesserLimit = upperLimit1; 
@@ -201,29 +259,29 @@ public class AutoBids{
 				}
 				
 				//send alert that manual bid is higher than limit
-				if (highestBid > upperLimit1) {
-					ps_alert.setString(1, username1);
-					ps_alert = connect.prepareStatement(alert);
-					results_alert = ps_alert.executeQuery();
-					
-					double alertNum = 0;
-					if(results_alert.next()) {
-						alertNum = Integer.parseInt(results_alert.getString(2));
-					}
-					alertNum++;
-					
-					ps_alert.close();
-					results_alert.close();
-					
-					// CREATING ALERT
-					String temp = "INSERT INTO alerts (username, alertNum, subject, text) VALUES (?, ?, 'A user has bidded higher than your upperlimit', "
-							+ "'Check Auction #" + aID + "Click <a href=\"AuctionInfo.jsp?aID=" + aID + "\">here</a> to view auction information.')";
-					PreparedStatement stmt = connect.prepareStatement(temp);
-					stmt.setString(1, username1);
-					stmt.setDouble(2, alertNum);
-					stmt.executeUpdate();				
-					stmt.close();
-				}
+//				if (highestBid >= upperLimit1) {
+//					ps_alert = connect.prepareStatement(alert);
+//					ps_alert.setString(1, username1);
+//					results_alert = ps_alert.executeQuery();
+//					
+//					double alertNum = 0;
+//					if(results_alert.next()) {
+//						alertNum = Integer.parseInt(results_alert.getString(2));
+//					}
+//					alertNum++;
+//					
+//					ps_alert.close();
+//					results_alert.close();
+//					
+//					// CREATING ALERT
+//					String temp = "INSERT INTO alerts (username, alertNum, subject, text) VALUES (?, ?, 'A user has bidded higher than your upperlimit', "
+//							+ "'Check Auction #" + aID + "Click <a href=\"AuctionInfo.jsp?aID=" + aID + "\">here</a> to view auction information.')";
+//					PreparedStatement stmt = connect.prepareStatement(temp);
+//					stmt.setString(1, username1);
+//					stmt.setDouble(2, alertNum);
+//					stmt.executeUpdate();				
+//					stmt.close();
+//				}
 
 			} else {
 				//update L1 
@@ -238,33 +296,32 @@ public class AutoBids{
 					autosPs.execute();		
 				}
 				
-				if (highestBid > upperLimit2) {
-					ps_alert.setString(1, username2);
-					ps_alert = connect.prepareStatement(alert);
-					results_alert = ps_alert.executeQuery();
-					
-					double alertNum = 0;
-					if(results_alert.next()) {
-						alertNum = Integer.parseInt(results_alert.getString(2));
-					}
-					alertNum++;
-					
-					ps_alert.close();
-					results_alert.close();
-					
-					// CREATING ALERT
-					String temp = "INSERT INTO alerts (username, alertNum, subject, text) VALUES (?, ?, 'A user has bidded higher than your upperlimit', "
-							+ "'Check Auction #" + aID + "Click <a href=\"AuctionInfo.jsp?aID=" + aID + "\">here</a> to view auction information.')";
-					PreparedStatement stmt = connect.prepareStatement(temp);
-					stmt.setString(1, username2);
-					stmt.setDouble(2, alertNum);
-					stmt.executeUpdate();				
-					stmt.close();
-				}
+//				if (highestBid >= upperLimit2) {
+//					ps_alert = connect.prepareStatement(alert);
+//					ps_alert.setString(1, username2);
+//					results_alert = ps_alert.executeQuery();
+//					
+//					double alertNum = 0;
+//					if(results_alert.next()) {
+//						alertNum = Integer.parseInt(results_alert.getString(2));
+//					}
+//					alertNum++;
+//					
+//					ps_alert.close();
+//					results_alert.close();
+//					
+//					// CREATING ALERT
+//					String temp = "INSERT INTO alerts (username, alertNum, subject, text) VALUES (?, ?, 'A user has bidded higher than your upperlimit', "
+//							+ "'Check Auction #" + aID + "Click <a href=\"AuctionInfo.jsp?aID=" + aID + "\">here</a> to view auction information.')";
+//					PreparedStatement stmt = connect.prepareStatement(temp);
+//					stmt.setString(1, username2);
+//					stmt.setDouble(2, alertNum);
+//					stmt.executeUpdate();				
+//					stmt.close();
+//				}
 			}
 		}
-		autosPs.close(); 
-		
+		autosPs.close(); 		
 		
 		//when someone's upper limit is greater than yours
 		//when manual bid is greater than your upper limit

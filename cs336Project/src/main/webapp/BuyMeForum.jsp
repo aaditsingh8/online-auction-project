@@ -11,7 +11,7 @@
 		<form action="LoggedIn.jsp">
 			<input type="submit" value="back">
 		</form>
-	<h1> BuyMe Forum </h1>
+	<h1> BuyMe Q/A</h1>
 		<form method="post" action="BuyMeForum.jsp">
 			<table>
 				<tr>
@@ -65,14 +65,14 @@
 	<table style="border:1px solid black;border-collapse:collapse;">
 		<thead>
 			<tr>
-				<th style="border:1px solid black;padding:3px"> Questions </th>
+				<th colspan="2" style="border:1px solid black;padding:3px"> Questions </th>
 			</tr>
 		</thead>
 		<%
 			if (results.next() == false) {
 		%>
 			<tr>
-				<td colspan="9" style="text-align: center;">None</td>
+				<td colspan="2" style="text-align: center;">None</td>
 			</tr>
 		<%}
 		
@@ -83,7 +83,7 @@
 				<td><form method="post" action="QuestionThread.jsp">
 					<label for="qID"><%=results.getString(1) %></label>
 					<input type="hidden" id="qID" name="qID" value=<%=results.getInt(2)%>>
-					<input type="submit">
+					<td><input type="submit" value="View Question"></td>
 				</form></td>
 				<td></td>
 			</tr>
@@ -93,7 +93,7 @@
 	</table>
 	<form method="post" action="BuyMeForum.jsp">
 		<textarea name="newQuestion" rows="4" cols="50"></textarea>
-		<input type="submit">
+		<input type="submit" value="Post Question">
 	</form>
 	
 		

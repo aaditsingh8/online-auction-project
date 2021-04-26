@@ -33,16 +33,29 @@
 		<form method="post" action="RegistrationRequest.jsp" onsubmit="return checkPasswords(this);">			
 			<table>
 				<tr>
-					<td>Email:</td><td><input type="text" name="email"></td>
+					<td>Email:</td><td><input type="text" name="email" required></td>
 				</tr>
 				<tr>
-					<td>Username:</td><td><input type="text" name="username"></td>
+					<td>Username:</td><td><input type="text" name="username" required></td>
 				</tr>
 				<tr>
-					<td>Password:</td><td><input type="text" name="password"></td>
+					<td>Password:</td><td><input type="text" name="password" required></td>
 				</tr>
 				<tr>
-					<td>Confirm Password:</td><td><input type="text" name="password2"></td>
+					<td>Confirm Password:</td><td><input type="text" name="password2" required></td>
+				</tr>
+				<tr>
+					<td>Phone Number:</td><td><input type="text" name="phone" required></td>
+				</tr>
+				<tr>
+					<td>Address:</td><td><input type="text" name="address" required></td>
+				</tr>
+				<tr>
+					<td>Anonymous: 
+								<input type="radio" name="anon" id="false" value="0" checked="checked">
+								<label for="false">False</label>
+								<input type="radio" name="anon" id="true" value="1">
+								<label for="true">True</label></td>
 				</tr>
 			</table>
 			<input type = "submit" value="Register">

@@ -20,6 +20,10 @@
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 		String email = request.getParameter("email");
+		String phone = request.getParameter("phone");
+		String address = request.getParameter("address");
+		String anon = request.getParameter("anon");
+
 		
 		boolean flag = false;
 		
@@ -47,12 +51,15 @@
 			connect.close();
 		}
 
-		String insert = "INSERT INTO Accounts(username, password, email) VALUES (?, ?, ?)";
+		String insert = "INSERT INTO Accounts(username, password, email, phone , isAnon, address) VALUES (?, ?, ?,?,?,?)";
 		                                                                      
 		PreparedStatement ps = connect.prepareStatement(insert);     
 		ps.setString(1, username);
 		ps.setString(2, password);
 		ps.setString(3, email);
+		ps.setString(4, phone);
+		ps.setString(5, anon);
+		ps.setString(6, address);
 		
 		ps.executeUpdate();
 		ps.close();

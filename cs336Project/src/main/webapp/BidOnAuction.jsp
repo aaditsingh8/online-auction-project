@@ -33,27 +33,47 @@
 			else {
 				out.println("<h4>Error: Inactive auction not found.</h4>");
 			}
+			double initialPrice = 0;
+			double minIncrement = 0;
+			insert = "SELECT a.aID, a.initPrice, a.minIncrement FROM auction a WHERE a.aID = ?;";
+			ps = connect.prepareStatement(insert);    
+			aID = request.getParameter("aID");
+			ps.setString(1,aID);
+			results = ps.executeQuery();
+			if(results.next()) {
+				initialPrice = results.getDouble(2);	
+				minIncrement = results.getDouble(3);
+			}
 			ps.close();
 			results.close();
 		%>
-		<h4>Current highest bid amount:<%=highestBid%></h4>
-		<br>
-		<h5>Create a manual bid:</h5>
-		<form action="manualBid.jsp" method="post">
-	        <input type="hidden" name="aID" value="<%= aID %>"/>
-	        <input type="submit" value="Manual Bid" />
-		</form>
-		<h5>Create an automatic bid:</h5>
-		<form action="automaticBid.jsp" method="POST">
-			<input type="hidden" name="aID" value="<%= aID %>"/>
-			<label>Bid Amount:</label> 
-				<input type="text" name="bidAmount" required/> <br>
-			<label>Secret upper limit:</label> 
-				<input type="text" name="upperLimit" /> <br>
-			<label>Bid Increment:</label> 
-				<input type="text" name="bidIncrement"/> <br>
-			<button type="submit" value="Submit"/>Create Autobid</button>
-		</form>	
+		
+		<h5 style="margin-bottom:4px; margin-top:0px;">Current highest bid amount:<%=highestBid%></h5>
+		<h5 style="margin-bottom:4px; margin-top:0px;">Initial (lowest possible) bid amount:<%=initialPrice%></h5>
+		<h5 style="margin-bottom:4px; margin-top:0px;">Minimum Price Increment: <%=minIncrement%></h5>
+		
+		<div>
+			<h4 style="margin-bottom:4px">Create a manual bid:</h4>
+			<form action="manualBidHandler.jsp" method="POST">	
+				<label for="bid">Your Bid:</label>
+				<input type="text" name="bid" id="bid"> <br>
+				<input type="hidden" name="aID" value="<%= aID%>"/>
+				<input type="submit" value="Create Manual Bid">
+			</form>
+		</div>	
+		<div>
+			<h4 style="margin-bottom:4px">Create an automatic bid:</h4>
+			<form action="automaticBid.jsp" method="POST">
+				<input type="hidden" name="aID" value="<%= aID %>"/>
+				<label>Bid Amount:</label> 
+					<input type="text" name="bidAmount" required/> <br>
+				<label>Secret upper limit:</label> 
+					<input type="text" name="upperLimit" /> <br>
+				<label>Bid Increment:</label> 
+					<input type="text" name="bidIncrement"/> <br>
+				<button type="submit" value="Submit"/>Create Autobid</button>
+			</form>	
+		</div>
 		<script></script>
 	</body>
 </html>

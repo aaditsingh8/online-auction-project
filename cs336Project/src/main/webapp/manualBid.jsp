@@ -38,7 +38,6 @@
 			if(results.next()) {
 				initialPrice = results.getInt(2);
 				minIncrement = results.getInt(3);
-				
 			}
 			else {
 				out.println("<h4>Error: Inactive auction not found.</h4>");
@@ -49,14 +48,6 @@
 			
 			
 		%>
-		<div>
-			<form action="manualBidHandler.jsp" method="POST">	
-				<h5>Minimum Price Increment: <%=minIncrement%></h5>
-				<label for="bid">Your Bid:</label>
-				<input type="text" name="bid" id="bid"> <br>
-				<input type="hidden" name="aID" value="<%= aID%>"/>
-				<input type="submit" value="Submit">
-			</form>
-		</div>	
+
 	</body>
 </html>

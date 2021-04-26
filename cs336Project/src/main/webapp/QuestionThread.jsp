@@ -65,6 +65,13 @@
 				<th style="border:1px solid black;padding:20px"><%= Question %> </th>
 			</tr>
 		</thead>
+		<%results.previous();
+			if (results.next() == false) {
+		%>
+			<tr>
+				<td colspan="2" style="text-align: center;">Not Answered Yet!</td>
+			</tr>
+		<%}%>
 		<%  results.previous(); 
 			while(results.next()){
 		%>

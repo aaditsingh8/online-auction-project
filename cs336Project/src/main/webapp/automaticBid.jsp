@@ -11,16 +11,17 @@
 	</head>
 	<body>
 		<form action="LoggedIn.jsp">
-			<input type="submit" value="Back to login">
+			<input type="submit" value="Back to home">
 		</form>
 		
-		<h1>Create an automatic bid</h1>
+		<h1>Automatic bid for Auction #<%= request.getParameter("aID") %></h1>
 		<%
 			String bidAmount = request.getParameter("bidAmount");
 			//String user = (String)session.getAttribute("user");
 			String upperLimit = request.getParameter("upperLimit");
 			String bidIncrement = request.getParameter("bidIncrement");
-			
+			String lastUsername="";
+			double lastUpperLimit=0;
 			double highestBid=0; 
 			double initialPrice=0;
 			//cannot bid less than current bid price
@@ -38,17 +39,26 @@
 			else {
 				out.println("<h4>Error: Inactive auction not found.</h4>");
 			}
-			insert = "select max(b.price) from bids b join auction a on b.aid = a.aid where b.aid = ?;";
+			
+			insert = "SELECT t.price price, t.username username, t.bidLimit bidLimit " +
+                    "FROM bids t " +
+                    "WHERE t.price = (SELECT max(t2.price) " +
+                                     "FROM bids t2 " +
+                                     "WHERE t2.aID = t.aID AND t.aID = ? " +
+                                     "GROUP BY t2.aID);";
 			ps = connect.prepareStatement(insert);
 			ps.setString(1,aID);
-			results = ps.executeQuery(); 
-			if(results.next()) {
-				highestBid = results.getDouble(1);			
+			ResultSet results2 = ps.executeQuery();
+			if(results2.first()) {
+				highestBid = results2.getDouble(1);
+				lastUsername = results2.getString(2);
+				lastUpperLimit = results2.getDouble(3);
 			}
 			else {
 				out.println("<h4>Error: Inactive auction not found.</h4>");
 			}
 			
+			//check if upperLimit is greater than user's previous upperLimit
 			if ((Double.parseDouble(bidAmount) <= highestBid)) { %> 
 				<p>Please enter a bid higher than <%=highestBid%></p>
 				<form action="BidOnAuction.jsp">
@@ -62,7 +72,14 @@
 					<input type="submit" value="Re-enter values">
 				</form>
 				
-			<%	} else {
+			<%	} else if ( lastUsername.equalsIgnoreCase( (String)session.getAttribute("user") ) 
+					&& Double.parseDouble(upperLimit) <= lastUpperLimit ) { %>
+				<p>Please enter an upper limit higher than your previous autobid: <%=lastUpperLimit%></p>
+				<form action="BidOnAuction.jsp">
+					<input type="hidden" name="aID" value="<%= aID%>"/>
+					<input type="submit" value="Re-enter values">
+				</form>
+			<%  } else {
 				String insertBid = "INSERT INTO Bids (aID, username, price, timestamp, bidLimit, maxIncrement) VALUES (?, ?, ?, ?, ?, ?)";
 				PreparedStatement bidPs = connect.prepareStatement(insertBid);
 				bidPs.setString(1, aID);
@@ -93,8 +110,10 @@
 				results.close();%>
 				
 				<h5>Automatic bid successful!</h5>
-				
-				<h5>Current highest bid amount: <%=highestBid%></h5>
+				<form action="AuctionInfo.jsp">
+					<input type="hidden" name="aID" value="<%= aID%>"/>
+					<input type="submit" value="Return to Auction Information">
+				</form>
 			<% } %>
 
 	</body>

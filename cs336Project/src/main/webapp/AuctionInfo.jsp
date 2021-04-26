@@ -11,7 +11,7 @@
 	</head>
 	<body>
 		<form action="LoggedIn.jsp">
-			<input type="submit" value="home">
+			<input type="submit" value="Back to Home">
 		</form>
 		
 		<h1>Buy Me</h1>

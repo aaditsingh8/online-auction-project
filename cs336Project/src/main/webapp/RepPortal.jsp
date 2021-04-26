@@ -18,6 +18,28 @@
 	<%
 		ApplicationDB database = new ApplicationDB();
 		Connection connect = database.getConnection();
+		
+		String ADMINCHECK = session.getAttribute("user").toString();
+		
+		try{
+			
+			String adminInsert = "select isCustomerRep from accounts " +
+								"where username = ?";
+			PreparedStatement ac = connect.prepareStatement(adminInsert);
+			ac.setString(1, ADMINCHECK);
+			ResultSet isAdmin = ac.executeQuery();
+			
+			isAdmin.next();
+			
+			if(isAdmin.getInt(1) != 1){
+				response.sendRedirect("LoggedIn.jsp");
+			}
+			
+			
+		}catch(Exception e){
+			out.println(e);
+			response.sendRedirect("LoggedIn.jsp");
+		}
 		if(request.getParameter("un") != null){
 		if(!request.getParameter("un").isBlank()){
 			String insert = "delete from accounts where username = ?";

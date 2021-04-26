@@ -62,9 +62,9 @@
 					<input type="submit" value="Re-enter values">
 				</form>	
 			<%
-		} else if (bid < minIncrement) {
+		} else if (bid < minIncrement+highestBid) {
 			%>
-			<p>Please enter a bid higher than the Minimum price Increment: <%=minIncrement%></p>
+			<p>Please enter a bid higher than the minimum price increment: <%=minIncrement%></p>
 			<form action="BidOnAuction.jsp">
 					<input type="hidden" name="aID" value="<%= aID%>"/>
 					<input type="submit" value="Re-enter values">
